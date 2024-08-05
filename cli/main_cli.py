@@ -19,16 +19,16 @@ def set_alphabet(alphabet=None, character=None):
 
 def cipher_CLI():
     try:
-        language = input('ingresa el idioma (en/es): ')
-        language_especial = input('contiene caracteres especiales? (y/n): ')
+        language = input('ingresa el idioma (en/es): ').strip().lower()
+        language_especial = input('contiene caracteres especiales? (y/n): ').strip().lower()
         set_alphabet(language, language_especial)
-        option_text = input('deseas cargar el texto plano desde un archivo? (y/n): ')
+        option_text = input('deseas cargar el texto plano desde un archivo? (y/n): ').strip().lower()
         if option_text == 'y':
-            text_plain = load_cipher('data/plain.txt')
+            text_plain = load_cipher('data/plain.txt').strip().lower()
             print('texto plano cargado con exito')
             print('texto plano> {}'.format(text_plain))
         else:
-            text_plain = input('ingresa el texto plano: ')
+            text_plain = input('ingresa el texto plano: ').strip().lower()
             print('texto plano> {}'.format(text_plain))
         character = input('ingresa la cantidad de caracteres por bloque: ')
         hill.encrypt(text_plain=text_plain, n=int(character))
@@ -38,13 +38,13 @@ def cipher_CLI():
 
 def decrypt_CLI():
     try:
-        language = input('ingresa el idioma (en/es): ')
-        language_especial = input('contiene caracteres especiales? (y/n): ')
+        language = input('ingresa el idioma (en/es): ').strip().lower()
+        language_especial = input('contiene caracteres especiales? (y/n): ').strip().lower()
         set_alphabet(language, language_especial)
         
         key = load_key('data/key.txt')
         print('matriz clave cargada con exito')
-        option_cipher = input('deseas cargar el texto cifrado desde un archivo? (y/n): ')
+        option_cipher = input('deseas cargar el texto cifrado desde un archivo? (y/n): ').strip().lower()
         if option_cipher == 'y':
             cipher_txt = load_cipher('data/cipher.txt')
             print('texto cifrado cargado con exito')
