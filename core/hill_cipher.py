@@ -14,8 +14,9 @@ class HillCipher():
         self.c = None
         self.p_decipher = None
         self.alphabet = None
+        self.especial = False  # Añadir atributo especial
 
-    def set_alphabet(self, alphabet=None, especial=False,numbers=False):
+    def set_alphabet(self, alphabet=None, especial=False, numbers=False):
         """
         Sets the alphabet for the Hill Cipher encryption.
         Parameters:
@@ -24,6 +25,7 @@ class HillCipher():
         Returns:
         None
         """
+        self.especial = especial  # Asignar valor de especial al atributo de la clase
         alphabet_es = 'abcdefghijklmnñopqrstuvwxyz'
         alphabet_en = 'abcdefghijklmnopqrstuvwxyz'
         especial_en = "!@#$%^&*()-_+={}[]:;'\"<>,./\\|?~` "
@@ -98,7 +100,12 @@ class HillCipher():
         self.text_plain = text_plain
         self.n = n
         self.modulus = len(self.alphabet)
-        self.text_blocks = [text_plain[i:i + n] for i in range(0, len(text_plain), n)]
+        
+        # Reemplazar espacios por 'x' si especial es False
+        if not self.especial:
+            self.text_plain = self.text_plain.replace(' ', 'x')
+        
+        self.text_blocks = [self.text_plain[i:i + n] for i in range(0, len(self.text_plain), n)]
         if len(self.text_blocks[-1]) < n:
             self.text_blocks[-1] += 'x' * (n - len(self.text_blocks[-1]))
         self.key_matrix = self.generate_key_matrix(n, self.modulus)

@@ -9,7 +9,7 @@ def load_key(filename):
 def load_txt(filename):
     with open(filename, 'r', encoding='utf-8') as file:
         content = file.read()
-    # Convertir a ASCII, reemplazando caracteres no ASCII con '?'
+    
     ascii_content = content.encode('latin1', 'replace').decode('latin1')
     return ascii_content
 def load_cipher(filename):
