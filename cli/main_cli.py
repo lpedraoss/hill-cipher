@@ -6,9 +6,16 @@ hill = HillCipher()
 def load_key(filename):
     return np.loadtxt(filename, dtype=int)
 
+def load_txt(filename):
+    with open(filename, 'r', encoding='utf-8') as file:
+        content = file.read()
+    # Convertir a ASCII, reemplazando caracteres no ASCII con '?'
+    ascii_content = content.encode('latin1', 'replace').decode('latin1')
+    return ascii_content
 def load_cipher(filename):
-    with open(filename, 'r') as file:
-        return file.read()
+    with open(filename, 'r', encoding='latin1') as file:
+        content = file.read()
+    return content
 
 def set_alphabet(alphabet=None, character=None, numbers=False):
     especial = False
@@ -25,7 +32,7 @@ def cipher_CLI():
         set_alphabet(language, language_especial, alphanumeric)
         option_text = input('deseas cargar el texto plano desde un archivo? (y/n): ').strip().lower()
         if option_text == 'y':
-            text_plain = load_cipher('data/plain.txt').strip().lower()
+            text_plain = load_txt('data/plain.txt').strip().lower()
             print('texto plano cargado con exito')
             print('texto plano> {}'.format(text_plain))
         else:
