@@ -10,18 +10,19 @@ def load_cipher(filename):
     with open(filename, 'r') as file:
         return file.read()
 
-def set_alphabet(alphabet=None, character=None):
+def set_alphabet(alphabet=None, character=None, numbers=False):
     especial = False
     if character == 'y':
         especial = True
-    hill.set_alphabet(alphabet=alphabet, especial=especial)
+    hill.set_alphabet(alphabet=alphabet, especial=especial, numbers=numbers)
     print('alfabeto establecido con exito...')
 
 def cipher_CLI():
     try:
         language = input('ingresa el idioma (en/es): ').strip().lower()
+        alphanumeric = input('deseas incluir numeros? (y/n): ').strip().lower() == 'y'
         language_especial = input('contiene caracteres especiales? (y/n): ').strip().lower()
-        set_alphabet(language, language_especial)
+        set_alphabet(language, language_especial, alphanumeric)
         option_text = input('deseas cargar el texto plano desde un archivo? (y/n): ').strip().lower()
         if option_text == 'y':
             text_plain = load_cipher('data/plain.txt').strip().lower()
@@ -39,9 +40,9 @@ def cipher_CLI():
 def decrypt_CLI():
     try:
         language = input('ingresa el idioma (en/es): ').strip().lower()
+        alphanumeric = input('deseas incluir numeros? (y/n): ').strip().lower() == 'y'
         language_especial = input('contiene caracteres especiales? (y/n): ').strip().lower()
-        set_alphabet(language, language_especial)
-        
+        set_alphabet(language, language_especial, alphanumeric)
         key = load_key('data/key.txt')
         print('matriz clave cargada con exito')
         option_cipher = input('deseas cargar el texto cifrado desde un archivo? (y/n): ').strip().lower()
