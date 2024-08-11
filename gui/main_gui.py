@@ -33,6 +33,9 @@ def set_alphabet(alphabet=None, character=None, numbers=False):
         especial = True
     hill.set_alphabet(alphabet=alphabet, especial=especial, numbers=numbers)
 
+def generate_key(n):
+    return np.random.randint(0, 26, size=(n, n))
+
 def execute_action():
     try:
         language = language_var.get()
@@ -46,23 +49,25 @@ def execute_action():
                 if text_plain is None:
                     return
                 text_plain = text_plain.strip().lower()
-                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()))
+                key_matrix = load_key('data/key.txt') if load_key_var.get() == 1 else generate_key(int(block_size_entry.get()))
+                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()), key_matrix=key_matrix)
                 result = hill.cipher_txt
             else:
                 cipher_txt = load_cipher('data/cipher.txt')
                 if cipher_txt is None:
                     return
-                key = load_key('data/key.txt')
+                key = load_key('data/key.txt') if load_key_var.get() == 1 else generate_key(int(block_size_entry.get()))
                 hill.decrypt(cipher_txt=cipher_txt, key=key, n=int(block_size_entry.get()))
                 result = hill.decrypted_txt
         else:
             if action_var.get() == "cipher":
                 text_plain = text_entry.get().strip().lower()
-                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()))
+                key_matrix = load_key('data/key.txt') if load_key_var.get() == 1 else generate_key(int(block_size_entry.get()))
+                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()), key_matrix=key_matrix)
                 result = hill.cipher_txt
             else:
                 cipher_txt = text_entry.get().strip().lower()
-                key = load_key('data/key.txt')
+                key = load_key('data/key.txt') if load_key_var.get() == 1 else generate_key(int(block_size_entry.get()))
                 hill.decrypt(cipher_txt=cipher_txt, key=key, n=int(block_size_entry.get()))
                 result = hill.decrypted_txt
         
@@ -76,8 +81,11 @@ def toggle_text_entry():
     else:
         text_entry.config(state=tk.NORMAL)
 
+def toggle_key_entry():
+    pass  # No se necesita hacer nada aquí ya que no hay campo de entrada de clave
+
 def mainGui():
-    global language_var, numbers_var, special_chars_var, action_var, load_file_var, text_entry, block_size_entry
+    global language_var, numbers_var, special_chars_var, action_var, load_file_var, load_key_var, text_entry, block_size_entry
 
     root = tk.Tk()
     root.title("Hill Cipher GUI")
@@ -87,6 +95,7 @@ def mainGui():
     special_chars_var = tk.StringVar(value="n")
     action_var = tk.StringVar(value="cipher")
     load_file_var = tk.IntVar()
+    load_key_var = tk.IntVar()
 
     tk.Label(root, text="Idioma (en/es):").pack()
     tk.Entry(root, textvariable=language_var).pack()
@@ -111,6 +120,8 @@ def mainGui():
     tk.Label(root, text="Cantidad de caracteres por bloque:").pack()
     block_size_entry = tk.Entry(root)
     block_size_entry.pack()
+
+    tk.Checkbutton(root, text="Cargar clave desde archivo", variable=load_key_var).pack()
 
     tk.Button(root, text="Ejecutar", command=execute_action).pack()
 
