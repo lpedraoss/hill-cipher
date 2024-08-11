@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-estoxesxconxespaciosxperoxsinxcaracteresxespecialesxconxnumerosx112321x3213x
-=======
-holamundo
->>>>>>> b6581d038bd5c4acbaba4e4eea800f5c927c0255
+estoxesxconxespaciosxperoxsinxcaracteresxespecialesxconxnumerosx112321x3213

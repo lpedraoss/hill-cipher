@@ -53,7 +53,7 @@ class HillCipher():
             if det != 0 and self.gcd(det, m) == 1:
                 return key_matrix
 
-    def encrypt(self, text_plain, n, key_matrix=None):
+    def encrypt(self, text_plain, n):
         self.text_plain = text_plain
         self.n = n
         self.modulus = len(self.alphabet)
@@ -65,10 +65,7 @@ class HillCipher():
         if len(self.text_blocks[-1]) < n:
             self.text_blocks[-1] += 'x' * (n - len(self.text_blocks[-1]))
         
-        if key_matrix is None:
-            self.key_matrix = self.generate_key_matrix(n, self.modulus)
-        else:
-            self.key_matrix = key_matrix
+        self.key_matrix = self.generate_key_matrix(n, self.modulus)
         
         self.p = [np.array([self.alphabet[char] for char in block]) for block in self.text_blocks]
         self.c = [(np.dot(self.key_matrix, block) % self.modulus).astype(int) for block in self.p]
