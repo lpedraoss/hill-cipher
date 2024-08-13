@@ -53,7 +53,7 @@ class HillCipher():
             if det != 0 and self.gcd(det, m) == 1:
                 return key_matrix
 
-    def encrypt(self, text_plain, n):
+    def encrypt(self, text_plain, n,key = False):
         self.text_plain = text_plain
         self.n = n
         self.modulus = len(self.alphabet)
@@ -64,8 +64,12 @@ class HillCipher():
         self.text_blocks = [self.text_plain[i:i + n] for i in range(0, len(self.text_plain), n)]
         if len(self.text_blocks[-1]) < n:
             self.text_blocks[-1] += 'x' * (n - len(self.text_blocks[-1]))
-        
-        self.key_matrix = self.generate_key_matrix(n, self.modulus)
+        if key:
+            filename = 'data/key_default.txt'
+            key_default = np.loadtxt(filename, dtype=int)
+            self.key_matrix = key_default
+        else:
+            self.key_matrix = self.generate_key_matrix(n, self.modulus)
         
         self.p = [np.array([self.alphabet[char] for char in block]) for block in self.text_blocks]
         self.c = [(np.dot(self.key_matrix, block) % self.modulus).astype(int) for block in self.p]
@@ -73,11 +77,10 @@ class HillCipher():
 
         with open("data/cipher.txt", "w") as file:
             file.write(self.cipher_txt)
-
-        with open("data/key.txt", "w") as file:
-            for row in self.key_matrix:
-                file.write(' '.join(str(num) for num in row) + '\n')
-
+        if not key:
+            with open("data/key.txt", "w") as file:
+                for row in self.key_matrix:
+                    file.write(' '.join(str(num) for num in row) + '\n')
         return self.cipher_txt
 
     def matrix_inverse(self, matrix, modulus):
@@ -87,9 +90,13 @@ class HillCipher():
         inverse_matrix = np.mod(det_inv * adjugate_matrix, modulus)
         return inverse_matrix
 
-    def decrypt(self, cipher_txt=None, key=None, n=None):
-        if key is not None:
-            self.key_matrix = key
+    def decrypt(self, cipher_txt=None, n=None,key=False):
+        
+        if key:
+            key_default = np.loadtxt('data/key_default.txt', dtype=int)
+            self.key_matrix = key_default
+        else:
+            self.key_matrix = np.loadtxt('data/key.txt', dtype=int)
         if n is not None:
             self.n = n
         self.cipher_txt = cipher_txt

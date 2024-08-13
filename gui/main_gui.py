@@ -40,30 +40,30 @@ def execute_action():
         language_especial = special_chars_var.get()
         set_alphabet(language, language_especial, alphanumeric)
         
+        use_default_key = default_key_var.get() == 1
+        
         if load_file_var.get() == 1:
             if action_var.get() == "cipher":
                 text_plain = load_txt('data/plain.txt')
                 if text_plain is None:
                     return
                 text_plain = text_plain.strip().lower()
-                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()))
+                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()), key=use_default_key)
                 result = hill.cipher_txt
             else:
                 cipher_txt = load_cipher('data/cipher.txt')
                 if cipher_txt is None:
                     return
-                key = load_key('data/key.txt')
-                hill.decrypt(cipher_txt=cipher_txt, key=key, n=int(block_size_entry.get()))
+                hill.decrypt(cipher_txt=cipher_txt, n=int(block_size_entry.get()), key=use_default_key)
                 result = hill.decrypted_txt
         else:
             if action_var.get() == "cipher":
                 text_plain = text_entry.get().strip().lower()
-                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()))
+                hill.encrypt(text_plain=text_plain, n=int(block_size_entry.get()), key=use_default_key)
                 result = hill.cipher_txt
             else:
                 cipher_txt = text_entry.get().strip().lower()
-                key = load_key('data/key.txt')
-                hill.decrypt(cipher_txt=cipher_txt, key=key, n=int(block_size_entry.get()))
+                hill.decrypt(cipher_txt=cipher_txt, n=int(block_size_entry.get()), key=use_default_key)
                 result = hill.decrypted_txt
         
         messagebox.showinfo("Resultado", result)
@@ -77,7 +77,7 @@ def toggle_text_entry():
         text_entry.config(state=tk.NORMAL)
 
 def mainGui():
-    global language_var, numbers_var, special_chars_var, action_var, load_file_var, text_entry, block_size_entry
+    global language_var, numbers_var, special_chars_var, action_var, load_file_var, text_entry, block_size_entry, default_key_var
 
     root = tk.Tk()
     root.title("Hill Cipher GUI")
@@ -87,6 +87,7 @@ def mainGui():
     special_chars_var = tk.StringVar(value="n")
     action_var = tk.StringVar(value="cipher")
     load_file_var = tk.IntVar()
+    default_key_var = tk.IntVar()
 
     tk.Label(root, text="Idioma (en/es):").pack()
     tk.Entry(root, textvariable=language_var).pack()
@@ -112,10 +113,11 @@ def mainGui():
     block_size_entry = tk.Entry(root)
     block_size_entry.pack()
 
+    tk.Checkbutton(root, text="Usar clave predeterminada", variable=default_key_var).pack()
+
     tk.Button(root, text="Ejecutar", command=execute_action).pack()
 
     root.mainloop()
 
 if __name__ == "__main__":
     mainGui()
-    

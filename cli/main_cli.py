@@ -3,9 +3,6 @@ from core.hill_cipher import HillCipher
 
 hill = HillCipher()
 
-def load_key(filename):
-    return np.loadtxt(filename, dtype=int)
-
 def load_txt(filename):
     with open(filename, 'r', encoding='utf-8') as file:
         content = file.read()
@@ -38,8 +35,9 @@ def cipher_CLI():
         else:
             text_plain = input('ingresa el texto plano: ').strip().lower()
             print('texto plano> {}'.format(text_plain))
+        key = input('desea cargar la clave de forma predeterminada? (y/n): ').strip().lower() == 'y'
         character = input('ingresa la cantidad de caracteres por bloque: ')
-        hill.encrypt(text_plain=text_plain, n=int(character))
+        hill.encrypt(text_plain=text_plain, n=int(character), key=key)
         print('texto cifrado> {}'.format(hill.cipher_txt))
     except Exception as e:
         print(f'Error al cifrar: {e}')
@@ -50,7 +48,7 @@ def decrypt_CLI():
         alphanumeric = input('deseas incluir numeros? (y/n): ').strip().lower() == 'y'
         language_especial = input('contiene caracteres especiales? (y/n): ').strip().lower()
         set_alphabet(language, language_especial, alphanumeric)
-        key = load_key('data/key.txt')
+        
         print('matriz clave cargada con exito')
         option_cipher = input('deseas cargar el texto cifrado desde un archivo? (y/n): ').strip().lower()
         if option_cipher == 'y':
@@ -60,7 +58,7 @@ def decrypt_CLI():
         else:
             cipher_txt = input('ingresa el texto cifrado: ')
             print('texto cifrado> {}'.format(cipher_txt))
-            
+        key = input('desea cargar la clave de forma predeterminada? (y/n): ').strip().lower() == 'y'
         character = input('ingresa la cantidad de caracteres por bloque: ')
         hill.decrypt(cipher_txt=cipher_txt, key=key, n=int(character))
         print('texto descifrado> {}'.format(hill.decrypted_txt))
